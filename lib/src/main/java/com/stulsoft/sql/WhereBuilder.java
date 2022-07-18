@@ -11,6 +11,8 @@ public class WhereBuilder {
         }
 
         StringBuilder stringBuilder = new StringBuilder(" WHERE ");
+        // todo
+/*
         for (int i = 0; i < filters.size(); ++i) {
             Filter filter = filters.get(i);
             if (i != 0) {
@@ -21,6 +23,7 @@ public class WhereBuilder {
 
             stringBuilder.append(filter.filterExpression());
         }
+*/
 
         return stringBuilder.toString();
     }

@@ -9,13 +9,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class GroupFilterTest {
 
     @Test
-    void filterExpression() {
-        Filter f1 = new SingleFilter(Operator.AND, "col1", CompareOperator.EQUAL, "abc");
-        Filter f2 = new SingleFilter(Operator.AND, "col2", CompareOperator.EQUAL, "ddd");
-        Filter f3 = new SingleFilter(Operator.AND, "col3", CompareOperator.EQUAL, "hhh");
-
-        GroupFilter groupFilter = new GroupFilter(Operator.AND, Arrays.asList(f1, f2, f3));
-
-        assertEquals("(col1 = 'abc' AND col2 = 'ddd' AND col3 = 'hhh')", groupFilter.filterExpression());
+    void filterExpressionEmpty() {
+        FilterContainer filterContainer = new FilterContainer();
+        GroupFilter groupFilter = new GroupFilter(Operator.AND, filterContainer);
+        assertTrue(groupFilter.filterExpression().isEmpty());
+    }
+    @Test
+    void filterExpressionNotEmpty() throws Exception{
+        FilterContainer filterContainer = new FilterContainer();
+        filterContainer
+                .addFilterElement(new SingleFilter("col1", CompareOperator.EQUAL, 1))
+                .addFilterElement(Operator.AND)
+                .addFilterElement(new SingleFilter("col2", CompareOperator.EQUAL, 2));
+        GroupFilter groupFilter = new GroupFilter(Operator.AND, filterContainer);
+        String expression = groupFilter.filterExpression();
+        assertFalse(expression.isEmpty());
+        assertEquals(" AND ( col1 = 1 AND col2 = 2)", expression);
     }
 }

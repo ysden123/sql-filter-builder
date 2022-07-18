@@ -2,33 +2,27 @@ package com.stulsoft.sql;
 
 import java.util.List;
 
-public class GroupFilter extends Filter {
-    private final List<Filter> filters;
+public class GroupFilter implements Filter {
+    private final Operator operator;
+    private final FilterContainer filterContainer;
 
-    public GroupFilter(Operator operator, List<Filter> filters) {
-        super(operator);
-        this.filters = filters;
+    public GroupFilter(Operator operator, FilterContainer filterContainer) {
+        this.operator = operator;
+        this.filterContainer = filterContainer;
     }
 
     @Override
     public String filterExpression() {
-        if (filters.isEmpty()) {
-            return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        List<FilterElement> filterElements = filterContainer.getFilterElements();
+        if (!filterElements.isEmpty()) {
+            stringBuilder.append(" ");
+            stringBuilder.append(operator);
+            stringBuilder.append(" (");
+            stringBuilder.append(filterContainer.build());
+            stringBuilder.append(')');
         }
 
-        StringBuilder stringBuilder = new StringBuilder("(");
-        for (int i = 0; i < filters.size(); ++i) {
-            Filter filter = filters.get(i);
-            if (i != 0) {
-                stringBuilder.append(' ');
-                stringBuilder.append(filter.getOperator());
-                if (i < filters.size()) {
-                    stringBuilder.append(' ');
-                }
-            }
-            stringBuilder.append(filter.filterExpression());
-        }
-        stringBuilder.append(')');
         return stringBuilder.toString();
     }
 }

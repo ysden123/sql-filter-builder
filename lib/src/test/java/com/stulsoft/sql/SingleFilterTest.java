@@ -8,7 +8,7 @@ class SingleFilterTest {
 
     @Test
     void filterExpression() {
-        Filter filter = new SingleFilter(Operator.AND, "productName", CompareOperator.LIKE, "%stu%");
+        Filter filter = new SingleFilter("productName", CompareOperator.LIKE, "%stu%");
         assertEquals("productName LIKE '%stu%'", filter.filterExpression());
     }
 }

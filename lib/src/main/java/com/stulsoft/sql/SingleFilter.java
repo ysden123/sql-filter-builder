@@ -1,12 +1,11 @@
 package com.stulsoft.sql;
 
-public class SingleFilter extends Filter{
+public class SingleFilter implements Filter{
     private final String columnName;
     private final CompareOperator compareOperator;
     private final Object value;
 
-    public SingleFilter(Operator operator, String columnName, CompareOperator compareOperator, Object value) {
-        super(operator);
+    public SingleFilter(String columnName, CompareOperator compareOperator, Object value) {
         this.columnName = columnName;
         this.compareOperator = compareOperator;
         this.value = value;
