@@ -45,6 +45,6 @@ class FilterContainerTest {
                 .addFilterElement(new SingleFilter("col1", CompareOperator.EQUAL, 1))
                 .addFilterElement(Operator.AND)
                 .addFilterElement(new SingleFilter("col2", CompareOperator.EQUAL, 2));
-        assertEquals(" col1 = 1 AND col2 = 2", filterContainer.build());
+        assertEquals("col1 = 1 AND col2 = 2", filterContainer.build());
     }
 }

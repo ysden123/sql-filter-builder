@@ -3,11 +3,9 @@ package com.stulsoft.sql;
 import java.util.List;
 
 public class GroupFilter implements Filter {
-    private final Operator operator;
     private final FilterContainer filterContainer;
 
-    public GroupFilter(Operator operator, FilterContainer filterContainer) {
-        this.operator = operator;
+    public GroupFilter(FilterContainer filterContainer) {
         this.filterContainer = filterContainer;
     }
 
@@ -16,13 +14,18 @@ public class GroupFilter implements Filter {
         StringBuilder stringBuilder = new StringBuilder();
         List<FilterElement> filterElements = filterContainer.getFilterElements();
         if (!filterElements.isEmpty()) {
-            stringBuilder.append(" ");
-            stringBuilder.append(operator);
-            stringBuilder.append(" (");
+            stringBuilder.append("(");
             stringBuilder.append(filterContainer.build());
             stringBuilder.append(')');
         }
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "GroupFilter{" +
+                "filterContainer=" + filterContainer +
+                '}';
     }
 }

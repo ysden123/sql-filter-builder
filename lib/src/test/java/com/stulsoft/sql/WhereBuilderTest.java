@@ -2,65 +2,119 @@ package com.stulsoft.sql;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class WhereBuilderTest {
 
     @Test
-    void build1() {
-        // todo
-/*
-        Filter[] filters = {
-                new SingleFilter(Operator.AND, "prodName", CompareOperator.EQUAL, "test"),
-                new SingleFilter(Operator.OR, "prodId", CompareOperator.EQUAL, 123)
-        };
+    void addFilterElement() throws Exception {
+        WhereBuilder whereBuilder = new WhereBuilder();
 
-        assertEquals(" WHERE prodName = 'test' OR prodId = 123", WhereBuilder.build(filters));
-*/
+        whereBuilder
+                .addFilterElement(new SingleFilter("c1", CompareOperator.EQUAL, 1))
+                .addFilterElement(Operator.AND)
+                .addFilterElement(new SingleFilter("c2", CompareOperator.EQUAL, 2))
+                .addFilterElement(Operator.AND)
+                .addFilterElement(new GroupFilter(new FilterContainer()
+                                .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 3))
+                                .addFilterElement(Operator.OR)
+                                .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 33))
+                        )
+                );
+        assertEquals("WhereBuilder{filterElements=[SingleFilter{columnName='c1', compareOperator==, value=1}, AND, SingleFilter{columnName='c2', compareOperator==, value=2}, AND, GroupFilter{filterContainer=FilterContainer{filterElements=[SingleFilter{columnName='c3', compareOperator==, value=3}, OR, SingleFilter{columnName='c3', compareOperator==, value=33}]}}]}",
+                whereBuilder.toString());
     }
 
     @Test
-    void build2() {
-//        todo
-/*
-        Filter[] filters = {
-                new SingleFilter(Operator.AND, "prodName", CompareOperator.EQUAL, "test"),
-                new SingleFilter(Operator.OR, "prodId", CompareOperator.EQUAL, 123),
-                new SingleFilter(Operator.AND, "index", CompareOperator.NOT_EQUAL, 9)
-        };
+    void addFilterElementWrong1() {
+        try {
+            WhereBuilder whereBuilder = new WhereBuilder();
 
-        assertEquals(" WHERE prodName = 'test' OR prodId = 123 AND index != 9", WhereBuilder.build(filters));
-*/
+            whereBuilder
+                    .addFilterElement(new SingleFilter("c1", CompareOperator.EQUAL, 1))
+                    .addFilterElement(new SingleFilter("c2", CompareOperator.EQUAL, 2))
+                    .addFilterElement(Operator.AND)
+                    .addFilterElement(new GroupFilter(new FilterContainer()
+                                    .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 3))
+                                    .addFilterElement(Operator.OR)
+                                    .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 33))
+                            )
+                    );
+            fail("An exception must be thrown");
+        } catch (Exception ignore) {
+        }
     }
 
     @Test
-    void build3() {
-        // todo
-/*
-        Filter[] filters = {
-                new SingleFilter(Operator.AND, "prodName", CompareOperator.EQUAL, "test"),
-        };
-
-        assertEquals(" WHERE prodName = 'test'", WhereBuilder.build(filters));
-*/
+    void addFilterElementWrong2() {
+        try {
+            WhereBuilder whereBuilder = new WhereBuilder();
+            whereBuilder
+                    .addFilterElement(new SingleFilter("c1", CompareOperator.EQUAL, 1))
+                    .addFilterElement(Operator.AND)
+                    .addFilterElement(new SingleFilter("c2", CompareOperator.EQUAL, 2))
+                    .addFilterElement(new GroupFilter(new FilterContainer()
+                                    .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 3))
+                                    .addFilterElement(Operator.OR)
+                                    .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 33))
+                            )
+                    );
+            fail("An exception must be thrown");
+        } catch (Exception ignore) {
+        }
     }
 
     @Test
-    void build4() {
-        // todo
-/*
-        Filter[] singleFilters = {
-                new SingleFilter(Operator.AND, "c1", CompareOperator.EQUAL, "test"),
-                new SingleFilter(Operator.AND, "c2", CompareOperator.EQUAL, 2)
-        };
+    void build1() throws Exception {
+        WhereBuilder whereBuilder = new WhereBuilder();
 
-        Filter[] filters = {
-                new SingleFilter(Operator.AND, "nnn", CompareOperator.NOT_EQUAL, 5),
-                new GroupFilter(Operator.OR, Arrays.asList(singleFilters))
-        };
-        assertEquals(" WHERE nnn != 5 OR (c1 = 'test' AND c2 = 2)", WhereBuilder.build(filters));
-*/
+        whereBuilder
+                .addFilterElement(new SingleFilter("c1", CompareOperator.EQUAL, 1))
+                .addFilterElement(Operator.AND)
+                .addFilterElement(new SingleFilter("c2", CompareOperator.EQUAL, 2))
+                .addFilterElement(Operator.AND)
+                .addFilterElement(new GroupFilter(new FilterContainer()
+                                .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 3))
+                                .addFilterElement(Operator.OR)
+                                .addFilterElement(new SingleFilter("c3", CompareOperator.EQUAL, 33))
+                        )
+                );
+
+        assertEquals("WHERE c1 = 1 AND c2 = 2 AND (c3 = 3 OR c3 = 33)",
+                whereBuilder.build());
+    }
+
+    @Test
+    void build2() throws Exception {
+        WhereBuilder whereBuilder = new WhereBuilder();
+
+        whereBuilder
+                .addFilterElement(new SingleFilter("prodName", CompareOperator.EQUAL, "test"))
+                .addFilterElement(Operator.OR)
+                .addFilterElement(new SingleFilter("prodId", CompareOperator.EQUAL, 123))
+                .addFilterElement(Operator.AND)
+                .addFilterElement(new SingleFilter("index", CompareOperator.NOT_EQUAL, 9));
+        assertEquals("WHERE prodName = 'test' OR prodId = 123 AND index != 9", whereBuilder.build());
+    }
+
+    @Test
+    void build3() throws Exception {
+        WhereBuilder whereBuilder = new WhereBuilder();
+
+        whereBuilder
+                .addFilterElement(new SingleFilter("prodName", CompareOperator.EQUAL, "test"));
+        assertEquals("WHERE prodName = 'test'", whereBuilder.build());
+    }
+
+    @Test
+    void build4() throws Exception {
+        WhereBuilder whereBuilder = new WhereBuilder();
+
+        whereBuilder
+                .addFilterElement(new SingleFilter("c1", CompareOperator.EQUAL, "test"))
+                .addFilterElement(Operator.OR)
+                .addFilterElement(new SingleFilter("c2", CompareOperator.EQUAL, 2));
+        assertEquals("WHERE c1 = 'test' OR c2 = 2", whereBuilder.build());
     }
 }
