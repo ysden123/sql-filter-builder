@@ -44,7 +44,7 @@ public class FilterContainer {
             }
 
             if (filterElement instanceof SingleFilter) {
-                if (!stringBuilder.isEmpty()) {
+                if (stringBuilder.length() != 0) {
                     stringBuilder.append(' ');
                 }
                 stringBuilder.append(((SingleFilter) filterElement).filterExpression());

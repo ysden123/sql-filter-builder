@@ -39,7 +39,7 @@ public class WhereBuilder {
                 stringBuilder.append(filterElement);
             }
             if (filterElement instanceof Filter){
-                if (!stringBuilder.isEmpty()){
+                if (stringBuilder.length() > 0){
                     stringBuilder.append(' ');
                 }
                 stringBuilder.append(((Filter) filterElement).filterExpression());
