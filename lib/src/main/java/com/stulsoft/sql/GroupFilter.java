@@ -3,11 +3,7 @@ package com.stulsoft.sql;
 import java.util.List;
 
 public class GroupFilter implements Filter {
-    private FilterContainer filterContainer;
-
-    private GroupFilter(){
-
-    }
+    private final FilterContainer filterContainer;
 
     public GroupFilter(FilterContainer filterContainer) {
         this.filterContainer = filterContainer;

@@ -1,5 +1,5 @@
 package com.stulsoft.sql;
 
-public abstract class Filter extends FilterElement {
-    abstract String filterExpression();
+public interface Filter extends FilterElement {
+    String filterExpression();
 }
