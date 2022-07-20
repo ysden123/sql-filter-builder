@@ -11,7 +11,7 @@ repositories {
 dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
-//    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation("com.google.code.gson:gson:2.9.0")
 }
 
 tasks.named<Test>("test") {
