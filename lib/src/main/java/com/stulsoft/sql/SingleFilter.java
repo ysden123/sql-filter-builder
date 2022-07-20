@@ -1,9 +1,13 @@
 package com.stulsoft.sql;
 
 public class SingleFilter implements Filter{
-    private final String columnName;
-    private final CompareOperator compareOperator;
-    private final Object value;
+    private String columnName;
+    private CompareOperator compareOperator;
+    private Object value;
+
+    private SingleFilter(){
+
+    }
 
     public SingleFilter(String columnName, CompareOperator compareOperator, Object value) {
         this.columnName = columnName;
